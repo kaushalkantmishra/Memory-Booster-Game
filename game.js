@@ -3,17 +3,23 @@ let userSeq = [];
 let btns = ["yellow", "red", "purple", "green"];
 let started = false;
 let level = 0;
-let highestScore = localStorage.getItem("highestScore") || 0; // Retrieve highest score from local storage or default to 0
+let highestScore = localStorage.getItem("highestScore") || 0;
 let h2 = document.querySelector("h2");
 
-document.addEventListener("keypress", function () {
-    if (started == false) {
-        console.log("game is started");
-        started = true; 
-
+// Start the game on button click
+function startGame() {
+    if (!started) {
+        console.log("Game is started");
+        started = true;
         levelUp();
     }
-});
+}
+
+// Add click event listeners to all buttons to start the game
+let allbtns = document.querySelectorAll(".btn");
+for (let btn of allbtns) {
+    btn.addEventListener("click", startGame);
+}
 
 function gameFlash(btn) {
     btn.classList.add("flash");
@@ -34,7 +40,7 @@ function levelUp() {
     level++;
     h2.innerText = `Level ${level}`;
 
-    let randIdx = Math.floor(Math.random() * 3);
+    let randIdx = Math.floor(Math.random() * 4);
     let randColor = btns[randIdx];
     let randBtn = document.querySelector(`.${randColor}`);
     gameSeq.push(randColor);
@@ -48,13 +54,13 @@ function checkAns(idx) {
             setTimeout(function () {
                 if (level > highestScore) {
                     highestScore = level;
-                    localStorage.setItem("highestScore", highestScore); // Update highest score in local storage
+                    localStorage.setItem("highestScore", highestScore);
                 }
                 levelUp();
             }, 1000);
         }
     } else {
-        h2.innerHTML = `Game Over! Your score was <b>${level}</b>. Highest Score: <b>${highestScore}</b><br> Press any key to start.`;
+        h2.innerHTML = `Game Over! Your score was <b>${level}</b>. Highest Score: <b>${highestScore}</b><br> Click any button to restart.`;
         document.querySelector("body").style.backgroundColor = "red";
         setTimeout(function () {
             document.querySelector("body").style.backgroundColor = "white";
@@ -64,17 +70,18 @@ function checkAns(idx) {
 }
 
 function btnPress() {
-    let btn = this;
-    userFlash(btn);
+    if (started) {
+        let btn = this;
+        userFlash(btn);
 
-    userColor = btn.getAttribute("id");
-    userSeq.push(userColor);
+        userColor = btn.getAttribute("id");
+        userSeq.push(userColor);
 
-    checkAns(userSeq.length - 1);
+        checkAns(userSeq.length - 1);
+    }
 }
 
-let allbtns = document.querySelectorAll(".btn");
-for (btn of allbtns) {
+for (let btn of allbtns) {
     btn.addEventListener("click", btnPress);
 }
 
