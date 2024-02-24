@@ -6,15 +6,16 @@ let level = 0;
 let highestScore = localStorage.getItem("highestScore") || 0; // Retrieve highest score from local storage or default to 0
 let h2 = document.querySelector("h2");
 
-document.addEventListener("keypress", function () {
-    if (started == false) {
-        console.log("game is started");
-        started = true; // Use '=' instead of '==' to assign the value
+let startButton = document.getElementById("startButton");
 
-        levelUp();
-    }
-});
-
+    // Add click event listener to the start button
+    startButton.addEventListener("click", function () {
+        if (started === false) {
+            console.log("Game is started");
+            started = true;
+            levelUp();
+        }
+    });
 function gameFlash(btn) {
     btn.classList.add("flash");
     setTimeout(function () {
